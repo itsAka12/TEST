@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be My Valentine?</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+background: linear-gradient(135deg, #fce3ec, #ffe8cc);
+min-height:100vh;
+padding:20px;
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+font-family:'Poppins',sans-serif;
+position:relative;
+}
+
+/* Floating hearts */
+.heart{
+position:absolute;
+bottom:-20px;
+font-size:18px;
+animation: floatUp linear infinite;
+opacity:0.7;
+}
+@keyframes floatUp{
+from{transform:translateY(0);}
+to{transform:translateY(-110vh);}
+}
+
+.container{
+width:100%;
+display:flex;
+justify-content:center;
+}
+
+.card{
+background: rgba(255,255,255,0.9);
+padding:40px;
+border-radius:30px;
+box-shadow:0 20px 40px rgba(255,182,193,0.4);
+max-width:400px;
+width:100%;
+text-align:center;
+animation: popIn 0.6s cubic-bezier(0.68,-0.55,0.27,1.55);
+position:relative;
+z-index:2;
+}
+
+@keyframes popIn{
+0%{transform:scale(0.5);opacity:0;}
+100%{transform:scale(1);opacity:1;}
+}
+
+.gif-container img{
+width:200px;
+height:200px;
+object-fit:cover;
+border-radius:20px;
+margin-bottom:20px;
+}
+
+h1{
+font-family:'Dancing Script',cursive;
+color:#ff4d6d;
+font-size:2.5em;
+margin-bottom:20px;
+}
+
+button{
+padding:12px 25px;
+font-size:16px;
+border:none;
+border-radius:50px;
+cursor:pointer;
+font-weight:600;
+transition:0.3s;
+margin:6px;
+}
+
+.option-btn{background:#ffe5ec;}
+.option-btn:hover{background:#ffb3c6;transform:scale(1.05);}
+
+.yes-btn{background:#ff4d6d;color:white;}
+.yes-btn:hover{transform:scale(1.1);}
+
+.no-btn{background:#dedede;}
+
+#nextBtn{display:none;background:#ff4d6d;color:white;}
+
+.success-message,
+.valentine-section,
+.score-section{
+display:none;
+}
+
+/* Mobile */
+@media(max-width:600px){
+.card{padding:25px;border-radius:20px;}
+h1{font-size:2em;}
+.gif-container img{width:150px;height:150px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<div class="card">
+
+<!-- QUIZ SECTION -->
+<div id="quizSection">
+<h1 id="question">Loading...</h1>
+<div id="options"></div>
+<button id="nextBtn">Next 💕</button>
+</div>
+
+<!-- SCORE SECTION (NEW) -->
+<div id="scoreSection" class="score-section">
+<h1>Your Score 💌</h1>
+<h2 id="scoreText"></h2>
+<button id="continueBtn" class="yes-btn">Continue 💘</button>
+</div>
+
+<!-- VALENTINE SECTION -->
+<div id="questionSection" class="valentine-section">
+<div class="gif-container">
+<img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmhrbmtqb3V2YmZ2aWJ5eWJqbm5oZnN5Y3h4aG5rOGZ6aHhua3VwMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/KztT2c4u8mYYUiMKdJ/giphy.gif">
+</div>
+<h1>Will you be my Valentine?</h1>
+<button class="yes-btn" id="yesBtn">Yes!</button>
+<button class="no-btn" id="noBtn">No</button>
+</div>
+
+<!-- SUCCESS -->
+<div class="success-message" id="successSection">
+<div class="gif-container">
+    <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2F4ZzBiNDZ4OGw3bWJmamh0YWhvc3N6NnFxYjdjcXRtZG5leTEycyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/iSoqEfkTJN6JDgR48Y/giphy.gif" alt="Penguin love"> </div> 
+    <h2>Yay! I knew you'd say yes! ❤️</h2>
+    <h1> I LOVE YOU MOTUU! ❤️</h1>
+<h2 id="finalMessage"></h2>
+</div>
+
+</div>
+</div>
+
+<audio id="bgMusic" loop>
+<source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mp3">
+</audio>
+
+<script>
+
+/* MUSIC */
+document.body.addEventListener("click",()=>{
+document.getElementById("bgMusic").play();
+},{once:true});
+
+/* Floating hearts */
+function createHeart(){
+const heart=document.createElement("div");
+heart.classList.add("heart");
+heart.innerHTML="💖";
+heart.style.left=Math.random()*100+"vw";
+heart.style.animationDuration=(3+Math.random()*5)+"s";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),8000);
+}
+setInterval(createHeart,400);
+
+/* QUIZ */
+const questions=[
+{question:"What is our anniversary date? 💕",options:["10 Jan","11 Jan","14 Feb","1 Jan"],answer:"11 Jan"},
+{question:"Do you love me? 🥺",options:["No","Maybe","Forever & Always","Sometimes"],answer:"Forever & Always"},
+{question:"What is my favorite hobby? 🎨",options:["Sleeping","Coding","Shopping","Watching series"],answer:"Sleeping"},
+{question:"What I enjoy most with you? 🍕",options:["Dates","Chatting","Dancing","Fighting"],answer:"Fighting"},
+{question:"How old was I when we had our first kiss? 💋",options:["17","18","19","20"],answer:"17"}
+];
+
+let currentQuestion=0;
+let score=0;
+let answered=false;
+
+const questionEl=document.getElementById("question");
+const optionsEl=document.getElementById("options");
+const nextBtn=document.getElementById("nextBtn");
+const quizSection=document.getElementById("quizSection");
+const scoreSection=document.getElementById("scoreSection");
+const scoreText=document.getElementById("scoreText");
+const continueBtn=document.getElementById("continueBtn");
+const valentineSection=document.getElementById("questionSection");
+const yesBtn=document.getElementById("yesBtn");
+const noBtn=document.getElementById("noBtn");
+const successSection=document.getElementById("successSection");
+const finalMessage=document.getElementById("finalMessage");
+
+function loadQuestion(){
+answered=false;
+nextBtn.style.display="none";
+const q=questions[currentQuestion];
+questionEl.textContent=q.question;
+optionsEl.innerHTML="";
+
+q.options.forEach(option=>{
+const btn=document.createElement("button");
+btn.textContent=option;
+btn.classList.add("option-btn");
+btn.onclick=()=>{
+if(answered) return;
+answered=true;
+
+if(option===q.answer){
+score++;
+btn.style.background="#ff4d6d";
+btn.style.color="white";
+}else{
+btn.style.background="#ccc";
+}
+
+nextBtn.style.display="inline-block";
+};
+optionsEl.appendChild(btn);
+});
+}
+
+nextBtn.addEventListener("click",()=>{
+currentQuestion++;
+if(currentQuestion<questions.length){
+loadQuestion();
+}else{
+quizSection.style.display="none";
+scoreSection.style.display="block";
+
+/* Score Display */
+if(score===5){
+scoreText.innerHTML="5/5 🥰 Perfect Cutelu! You know me completely!  And last question🥰❤️";
+}
+else if(score>=3){
+scoreText.innerHTML=score+"/5 💕 You know me pretty well but still disappointed !  And last question🥰❤️";
+}
+else{
+scoreText.innerHTML=score+"/5 😌 You need more dates with me dust ladke!  And last question🥰❤️";
+}
+}
+});
+
+continueBtn.addEventListener("click",()=>{
+scoreSection.style.display="none";
+valentineSection.style.display="block";
+});
+
+loadQuestion();
+
+/* Moving No Button */
+function moveButton(){
+const x=Math.random()*(window.innerWidth-100);
+const y=Math.random()*(window.innerHeight-50);
+noBtn.style.position="fixed";
+noBtn.style.left=x+"px";
+noBtn.style.top=y+"px";
+}
+
+if(window.matchMedia("(max-width:768px)").matches){
+noBtn.addEventListener("click",moveButton);
+}else{
+noBtn.addEventListener("mouseover",moveButton);
+}
+
+/* YES CLICK */
+yesBtn.addEventListener("click",()=>{
+valentineSection.style.display="none";
+successSection.style.display="block";
+
+if(score===5){
+finalMessage.innerHTML="Perfect Score + Yes?? You're my soulmate forever 😭💖";
+}
+else{
+finalMessage.innerHTML="And as punishment sing for me motlu 😌💗";
+}
+});
+
+</script>
+
+</body>
+</html>
